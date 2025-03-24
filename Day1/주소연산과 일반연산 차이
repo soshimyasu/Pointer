@@ -120,7 +120,8 @@ int func(const int **p)
 	for (i = 0; i < (*p)[0]; i++) {
 		sum += (*p)[i+1];
 	}
-	*p += (*p)[0] + 1;
+	//*p += (*p)[0] + 1;
+	*p += i + 1;
 
 	return sum;
 }
