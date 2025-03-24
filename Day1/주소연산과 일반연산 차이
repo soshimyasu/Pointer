@@ -59,3 +59,42 @@ void main(void)
 }
 
 #endif
+
+
+/***********************************************************/
+// Pointer 주소 넘기기, Swap2() 주목 : 기억을 상기해라~~
+/***********************************************************/
+#include <stdio.h>
+
+void Swap(int* p, int* q)
+{
+	int t;
+
+	t = *q;
+	*q = *p;
+	*p = t;
+}
+
+void Swap2(int** p, int** q)
+{
+	int *t;
+
+	t = *q;
+	printf("Before  t=[%08p], p=[%08p], q=[%08p]\n", t, p, q);
+	*q = *p;
+	*p = t;
+
+	printf("After  t=[%08p], p=[%08p], q=[%08p]\n", t, p, q);
+}
+
+void main(void)
+{
+	int a = 10, b = 20;
+	
+	printf("Before : %d[%08p] %d[%08p]\n", a, &a, b, &b);
+	//Swap(&a, &b);
+	Swap2(&(&a), &(&b));	// OK
+	printf("After : %d[%08p] %d[%08p\n", a, &a, b, &b);
+}
+
+#endif
