@@ -1,0 +1,61 @@
+/***********************************************************/
+// [1-1-1] 버퍼의 요소수 계산
+/***********************************************************/
+
+#if 0
+#include <stdio.h>
+
+void main(void)
+{
+	int a[10];
+
+	int *start = &a[0];
+	int *end = &a[9] + 1;
+	int *p = &a[3];
+
+	printf(" start[%x], end[%x], p[%x]\n", start, end, p);
+	printf(" end-start=%d\n", end - start);
+	printf(" end-1=%x\n", end - 1);
+
+	printf("%d\n", sizeof(a) / sizeof(a[0]));
+
+	// 주소 - 주소 = 주소간 데이터 갯수
+	printf("%d\n", (end - start) / sizeof(int));// 2
+	printf("%d\n", (end - start));				// 10
+	printf("%d\n", (p - start) / sizeof(int));	// 0
+	printf("%d\n", (p - start));				// 3
+	printf("%d\n", (end - p) / sizeof(int));	// 1
+	printf("%d\n", (end - p));					// 7
+}
+
+#endif
+
+/***********************************************************/
+// [1-1-2] 주소의 연산과 타입 승계
+/***********************************************************/
+
+#if 01
+
+#include <stdio.h>
+
+void main(void)
+{
+	int *p, *q;
+
+	p = (int *)0x1008;
+	q = (int *)0x1000;
+
+	// 주소와 주소 간은 '-'만 가능하다
+	//printf("%d\n", p * q); // x 주소 연산에서 '*' 는 지원하지 않음, *연산시 왼쪽/오른쪽 피연산자로 주소 사용 불가
+	//printf("%d\n", p / q); // x 주소 연산에서 '/' 는 지원하지 않음, /연산시 왼쪽/오른쪽 피연산자로 주소 사용 불가
+	//printf("%d\n", p + q); // x 주소 연산에서 '+' 는 지원하지 않음
+	printf("%d\n", p - q);
+	printf("%d\n", q - p);	// 가능!!
+
+	//printf("0x%p\n", p * 2); // p는 주소, *연산시 왼쪽 피연산자로 주소 사용 불가
+	//printf("0x%p\n", p / 2); // p는 주소, /연산시 왼쪽 피연산자로 주소 사용 불가 
+	printf("0x%p\n", p + 2); // 0x1010
+	printf("0x%p\n", p - 2); // 0x1000
+}
+
+#endif
