@@ -137,3 +137,355 @@ void main(void)
 		printf("SUM=%d\n", func(&p));
 	}
 }
+
+
+
+/***********************************************************/
+// [1-3-4] : 다중 포인터의 활용
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+int func(const int **p)
+{
+	int i;
+	int sum = 0;
+
+	printf("=========%d\n", (*p)[0]);
+
+	for (i = 0; i < (*p)[0]; i++) {
+		sum += (*p)[i+1];
+	}
+	//*p += (*p)[0] + 1;
+	*p += i + 1;
+
+	return sum;
+}
+
+void main(void)
+{
+	int i;
+	int a[] = { 1, 10, 2, -5, -20, 3, 100, 200, 300, 4, -10, -20, -30, -40 };
+	const int *p = a;
+
+	for (i = 0; i < 4; i++)
+	{
+		printf("SUM=%d\n", func(&p));
+	}
+}
+
+#endif
+
+/***********************************************************/
+// [1-1-5] 배열 parameter
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+int sum(int b[4])	// 이는 int *로 casting 된다.첫 요소의 주소가 전달된다.
+{
+	int i, sum = 0;
+	
+	// sizeof(b) = 4 (32bit)
+	// sizeof(b[0]) = 4
+	for (i = 0; i < (sizeof(b) / sizeof(b[0])); i++)
+	{
+		sum += b[i];
+	}
+	return sum;
+}
+
+void main(void)
+{
+	int a[4] = { 1,2,3,4 };
+
+	// sizeof(a) = 16
+	// sizeof(a[0]) = 4
+	printf("%d\n", sum(a));	// int *가 func로 넘어간다.
+}
+
+#endif
+
+#if 0
+
+#include <stdio.h>
+
+void func(int b[5])
+{
+	printf("0x%p\n", b);
+	printf("0x%p\n", &b[0]);
+	printf("%d\n", sizeof(b));
+}
+
+void main(void)
+{
+	int a[5] = { 10,20,30,40, 50 };
+
+	printf("0x%p\n", a);
+	printf("0x%p\n", &a[0]);
+	printf("%d\n", sizeof(a));
+	func(a);
+}
+
+#endif
+
+/***********************************************************/
+// [1-1-6] 배열 활용식을 이용한 배열 요소 액세스
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+int a[4] = { 1,2,3,4 };
+
+void main(void)
+{
+	printf("%d\n", a[0]);
+	printf("%d\n", a[3]);
+	printf("%d\n", a[4]);
+	printf("%d\n", a[-1]);
+
+	printf("%d\n", (a + 1)[2]);
+	printf("%d\n", a[3]);
+
+	printf("%d\n", a[2]);
+	printf("%d\n", *(a + 2));
+	printf("%d\n", *(2 + a));
+	printf("%d\n", 2[a]); // 에러 안뜬다. []은 사용자가 쉽게 인식하기 위한 기호일 뿐이다.
+						// 컴파일러는 단순히 *주소 연산이다. 2[a] = *(2+a) = *(a+2)
+}
+
+#endif
+
+/**********************************************************/
+// [1-2-1] : 배열의 요소 타입
+/**********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+void main(void)
+{
+	int *a;  
+
+	int *b1[4];
+	int **b2[4];
+	int b3[4];
+
+	b1[0] = a;
+	b2[0] = &a;
+	b3[0] = *a;
+}
+
+#endif
+
+#if 0
+
+#include <stdio.h>
+
+void main(void)
+{
+	int(*p)[4];
+
+	// 변수 선언
+
+	//	b1[4]
+	//	b2[4]
+	//	b3[4]
+	int (*b1[4])[4];
+	int(**b2[4])[4];	// int(**)[4] b2[4] => int(**b2[4])[4]
+	int	b3[4];
+
+	b1[0] = p;	// p type : int (*)[4]
+	b2[0] = &p; // &p type : int(**)[4]
+	b3[0] = (*p)[1]; // p type : int
+}
+
+#endif
+
+#if 0
+
+#include <stdio.h>
+
+void main(void)
+{
+	int a[3];
+
+	// 변수 선언
+
+	//	b1[4]
+	//	b2[4]
+	//	b3[4]
+	int *b1[3];
+	int(*b2[4])[3];
+	int	b3[4];
+
+	b1[0] = a;	// type  배열: int[3], 주소:int *
+	b2[0] = &a;	// type : int(*)[3]
+	b3[0] = a[1];// type int
+}
+
+#endif
+
+#if 0
+
+#include <stdio.h>
+
+void main(void)
+{
+	int *a[3];
+
+	// 변수 선언
+
+	int	**b1[4];
+	int *(*b2[4])[3];
+	int *b3[4];
+
+	b1[0] = a;	// type 배열: int *[3], 주소 : int**
+	b2[0] = &a; // type : int *(*)[3]
+	b3[0] = a[1]; // type : int *
+}
+
+#endif
+
+/**********************************************************/
+// [1-2-2] : 함수의 리턴 타입
+/**********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+int *a;
+
+int *f1(void)
+{
+	return a; // type : int *
+}
+
+int **f2(void)
+{
+	return &a; // type : int *(*) => int **
+}
+
+int f3(void)
+{
+	return *a;	// int *a => *a삭제 ==> int
+}
+
+void main(void)
+{
+	f1();
+	f2();
+	f3();
+}
+
+#endif
+
+#if 0
+
+#include <stdio.h>
+
+int(*p)[4];
+
+int (*f1(void))[4]
+{
+	return p;	// int (*)[4]
+}
+
+int (**f2(void))[4]
+{
+	return &p;	// int (*p)[4] => p 없애고 (*) ==> int (*(*))[4] = int (**)[4]
+}
+
+int f3(void)
+{
+	return (*p)[1];	// int (p)[4] =>  int
+}
+
+void main(void)
+{
+	f1();
+	f2();
+	f3();
+}
+
+#endif
+
+#if 0
+
+#include <stdio.h>
+
+int(*p)(int);
+
+int (*f1(void))(int)
+{
+	return p;// int (*)(int)
+}
+
+int (**f2(void))(int)
+{
+	return &p;// int (*p)(int) => p없애고 (*) ==> int (*(*))(int) = int (**)(int)
+}
+
+int f3(void)
+{
+	return (*p)(3);// int (*)(int)
+}
+
+void main(void)
+{
+	f1();	
+	f2();	
+	f3();
+}
+
+#endif
+
+/***********************************************************/
+// [1-3-1] : 문자열과 %s 옵션 이해
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h> 
+
+void main(void)
+{
+	char a[] = "LEW";
+	char *p = "%s\n";
+
+	printf("%s\n", "LEW");
+	printf("%s\n", a);
+	printf("%s\n", *a);	// *a 값을 문자열의 시작 주소로 인식하고, 오류가 발생함!! , 안할수도 있음( 머신에 따라 다름 )
+	printf(p, a);
+}
+
+#endif
+
+/**********************************************************/
+// [1-3-2] : 무엇이 인쇄될까요?
+/**********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+void main(void)
+{
+	char a[4] = "LEW";
+	char *p = a;
+
+	printf("%p:%p \n", p, &p);
+	printf("%p:%p \n", a, &a);			// 상수화된 주소, 변경 불가
+	printf("%p:%p \n", main, &main);	// 상수화된 주소, 변경 불가
+	printf("%p:%p \n", "LEW", &"LEW");	// 상수화된 주소, 변경 불가
+}
+
+#endif
