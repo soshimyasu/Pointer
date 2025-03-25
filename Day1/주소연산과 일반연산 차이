@@ -93,7 +93,7 @@ void main(void)
 	
 	printf("Before : %d[%08p] %d[%08p]\n", a, &a, b, &b);
 	//Swap(&a, &b);
-	Swap2(&(&a), &(&b));	// OK
+	Swap2(&(&a), &(&b));	// 이런거 안됨, 쓰지마!!!
 	printf("After : %d[%08p] %d[%08p\n", a, &a, b, &b);
 }
 
