@@ -395,13 +395,95 @@ void main(void)
 // ---------------------------------------------------------------------------
 // 직관적 코드 설계 4
 // ---------------------------------------------------------------------------
-
+#include <stdio.h> 
+ 
+struct _st
+{
+    int num;
+    char * name;
+};
+ 
+typedef struct _st (*FP2)[3];
+//struct _st (*f2(void))[3]                     // [1]
+FP2 f2(void)
+{
+    static struct _st a[2][3] = { {{1,"KIM"}, {2,"SONG"}, {3, "KI"}}, {{4, "KANG"}, {5, "PARK"}, {6, "LEW"}} };
+    return a;//struct _st (*)[3]
+}
+ 
+struct _st *f1(int num)                   // [2]
+{
+    return f2()[num];//a[num] type : struct _st *
+}
+ 
+void main(void)
+{
+    printf("%s\n", &f1(0)[4].name[1]);   // [3] a[1][1].name+1 == &a[1][1].name[1]
+    //f1(0) == f2()[0] == a[0]
+    //a[1][1].name+1 == a[0][4].name+1 == f1(0)[4].name+1
+    //&a[1][1].name[1] == &a[0][4].name[1] == &f1(0)[4].name[1]
+}
+/**************************************************************
+    Problem: 6659
+    Language: C
+    Result: Accepted
+    Time:2 ms
+    Memory:1048 kb
+****************************************************************/
 
 
 // ---------------------------------------------------------------------------
 // 직관적 코드 설계 5
 // ---------------------------------------------------------------------------
-
+#include <stdio.h>
+ 
+int *f1(void)
+{
+    static int a[4] = { 1,2,3,4 };
+    return a;
+}
+ 
+int *f2(void)
+{
+    static int a[4] = { 10,20,30,40 };
+    return a;
+}
+ 
+int *(*fa[2])() = { f1, f2 };
+ 
+int f4(void)
+{
+    return 1;
+}
+ 
+typedef int *(**FP1)();
+//int *(**func1(void))()     // [1]
+FP1 func1(void)
+{
+    return fa;//int *(**)()
+}
+ 
+typedef int *(*FP2)();
+typedef int(*FP)(void);
+//int *(*func2(int (*p)(void)))()   // [2]
+FP2 func2(FP p)
+{//p type : int (*)(void)
+    return func1()[p()];//fa[p()] type : int *(*)()
+}
+ 
+void main(void)
+{
+    printf("%d\n", func2(f4)()[3]);   // [3] func2(f4) == func1()[f4()] == fa[1] == f2
+    //f2() == a
+    //a[3] == f2()[3] == func2(f4)()[3]
+}
+/**************************************************************
+    Problem: 6660
+    Language: C
+    Result: Accepted
+    Time:12 ms
+    Memory:1048 kb
+****************************************************************/
 
 
 /***********************************************************/
