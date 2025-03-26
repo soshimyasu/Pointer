@@ -401,3 +401,183 @@ void main(void)
 // ---------------------------------------------------------------------------
 // 직관적 코드 설계 5
 // ---------------------------------------------------------------------------
+
+
+
+/***********************************************************/
+// [1-7-1] : Type casting 연습 1
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+void func(int x)
+{
+	printf("%f\n", ((double *)x)[0]);
+	printf("%f\n", ((double *)x)[1]);
+	printf("%f\n", ((double *)x)[2]);
+}
+
+void main(void)
+{
+	double d[3] = { 3.14, 5.125, -7.42 };
+
+	func((int)d);
+}
+
+#endif
+
+#if 0
+
+#include <stdio.h>
+
+void func(int x)
+{
+	int i;
+
+	for (i = 0; i < 3; i++)
+	{
+		printf("%f\n", ((double *)x)[i]);
+	}
+}
+
+void main(void)
+{
+	double d[3] = { 3.14, 5.125, -7.42 };
+
+	func((int)d);
+}
+
+#endif
+
+/***********************************************************/
+// [1-7-2] : Type casting 연습 2
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+void func(void * p)
+{
+	int i;
+
+	for (i = 0; i < 3; i++)
+	{
+		printf("%f\n", (*(double **)p)[i]); // d == (*(double **)p)
+	}
+}
+
+void main(void)
+{
+	double d[3] = { 3.14, 5.125, -7.42 };
+	void *p = d;
+
+	func(&p);	// double *
+}
+
+#endif
+
+/***********************************************************/
+// [1-7-3] :  Type casting 연습 3
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+void func(void *p)
+{
+	printf("%s\n", *((char **)p));
+}
+
+void main(void)
+{
+	char * p = "Willtek";
+	func(&p);
+}
+
+#endif
+
+/***********************************************************/
+// [1-7-4] : Type casting 연습 4
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+struct st
+{
+	int i;
+	char c;
+};
+
+void func(long long int a)
+{
+	printf("%d\n", ((struct st *)&a)->i);
+	printf("%c\n", ((struct st *)&a)->c);
+}
+
+void main(void)
+{
+	struct st x = { 100, 'A' };
+
+	func(*(long long int *)&x);
+}
+
+#endif
+
+/***********************************************************/
+// [1-7-5] : int 변수로 함수 실행하기
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+int func(int a, int b)
+{
+	return a + b;
+}
+
+void main(void)
+{
+	int a = (int)func;
+
+	printf("%d\n", func(3, 4));
+	printf("%d\n", ((int (*)(int,int))a)(3,4));
+}
+
+#endif
+
+/***********************************************************/
+// [1-7-6] : Type casting 연습 5
+/***********************************************************/
+
+#if 0
+
+#include <stdio.h>
+
+// typedef int (**FP)(int,int)
+void func(void * p)
+{
+	printf("%d\n", (*(int (**)(int,int))p)(3,4) );
+	//printf("%d\n", (*(FP)p)(3,4));
+}
+
+int add(int a, int b)
+{
+	return a + b;
+}
+
+void main(void)
+{
+	void *p = (void *)add;
+
+	func(&p);
+}
+
+#endif
+
